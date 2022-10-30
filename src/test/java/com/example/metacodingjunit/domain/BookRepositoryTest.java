@@ -89,4 +89,21 @@ public class BookRepositoryTest {
     }
 
     // 5. 책 수정하기
+    @Sql("classpath:db/tableInit.sql") // primary key 초기화 (전체테스트 시 에러 방지)
+    @Test
+    public void 책수정하기() {
+        // given
+        Long id = 1L;
+        String expectedTitle = "title2";
+        String expectedAuthor = "author2";
+        Book book = new Book(id, expectedTitle, expectedAuthor);
+
+        // when
+        Book bookPS = bookRepository.save(book);
+
+        // then
+        assertThat(bookPS.getId()).isEqualTo(id);
+        assertThat(bookPS.getTitle()).isEqualTo(expectedTitle);
+        assertThat(bookPS.getAuthor()).isEqualTo(expectedAuthor);
+    }
 }
