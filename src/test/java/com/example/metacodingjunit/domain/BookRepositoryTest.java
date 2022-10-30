@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest // DB 관련 컴포넌트만 메모리에 로딩 (예. Repository)
 public class BookRepositoryTest {
@@ -57,6 +58,7 @@ public class BookRepositoryTest {
     }
 
     // 3. 책 한건보기
+    @Sql("classpath:db/tableInit.sql") // primary key 초기화 (전체테스트 시 에러 방지)
     @Test
     public void 책한건보기() {
         // given
@@ -73,6 +75,7 @@ public class BookRepositoryTest {
     }
 
     // 4. 책 삭제하기
+    @Sql("classpath:db/tableInit.sql") // primary key 초기화 (전체테스트 시 에러 방지)
     @Test
     public void 책삭제() {
         // given
