@@ -36,7 +36,7 @@ public class BookService {
     // 2. 책 목록보기
     public List<BookRespDto> 책목록보기() {
         return bookRepository.findAll().stream()
-                .map(book -> book.toDto())
+                .map(book -> book.toDto()) // .map(book::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -54,8 +54,9 @@ public class BookService {
 
     // 5. 책 수정하기
     @Transactional
-    public void 책수정하기(Long id, BookSaveReqDto dto) {
+    public BookRespDto 책수정하기(Long id, BookSaveReqDto dto) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 책이 없습니다. id=" + id));
         book.update(dto.getTitle(), dto.getAuthor());
+        return book.toDto();
     } // 메서드 종료 시 더티체킹으로 UPDATE 됨
 }
