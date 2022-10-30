@@ -35,8 +35,21 @@ public class BookService {
     }
 
     // 3. 책 한건보기
+    public BookRespDto 책한건보기(Long id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 책이 없습니다. id=" + id));
+        return book.toDto();
+    }
 
     // 4. 책 삭제하기
+    @Transactional
+    public void 책삭제하기(Long id) {
+        bookRepository.deleteById(id);
+    }
 
     // 5. 책 수정하기
+    @Transactional
+    public void 책수정하기(Long id, BookSaveReqDto dto) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 책이 없습니다. id=" + id));
+        book.update(dto.getTitle(), dto.getAuthor());
+    } // 메서드 종료 시 더티체킹으로 UPDATE 됨
 }

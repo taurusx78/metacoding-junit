@@ -82,7 +82,9 @@ public class BookRepositoryTest {
         Long id = 1L;
 
         // when
-        bookRepository.deleteById(id); // 해당 id가 없는 경우 IllegalArgumentException 발생
+        // 1. id가 null인 경우 IllegalArgumentsException 발동
+        // 2. id가 없는 경우 EmptyResultDataAccessException 발동
+        bookRepository.deleteById(id); 
 
         // then
         assertFalse(bookRepository.findById(id).isPresent()); // false일 때 테스트 성공
