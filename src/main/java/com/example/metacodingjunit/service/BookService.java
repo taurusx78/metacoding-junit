@@ -26,11 +26,9 @@ public class BookService {
     @Transactional
     public BookRespDto 책등록하기(BookSaveReqDto dto) {
         Book bookPS = bookRepository.save(dto.toEntity());
-        if (bookPS != null) {
-            // 책 등록 성공 시 메일 전송
-            if (!mailSender.send()) {
-                throw new RuntimeException("메일 전송에 실패하였습니다.");
-            }
+        // 책 등록 성공 시 메일 전송
+        if (!mailSender.send()) {
+            throw new RuntimeException("메일 전송에 실패하였습니다.");
         }
         return bookPS.toDto(); // * 엔티티가 아닌 DTO 응답하기!
     }
