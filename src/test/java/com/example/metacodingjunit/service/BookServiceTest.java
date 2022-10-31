@@ -13,16 +13,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.example.metacodingjunit.domain.Book;
 import com.example.metacodingjunit.domain.BookRepository;
 import com.example.metacodingjunit.util.MailSender;
 import com.example.metacodingjunit.web.dto.request.BookSaveReqDto;
-import com.example.metacodingjunit.web.dto.response.BookRespDtoList;
 import com.example.metacodingjunit.web.dto.response.BookRespDto;
+import com.example.metacodingjunit.web.dto.response.BookRespDtoList;
 
 // Repository를 제외한 Service만 테스트하기 위해 가짜데이터 생성
 
+@ActiveProfiles("dev") // dev 모드에서만 동작하도록 설정
 @ExtendWith(MockitoExtension.class) // 가짜 메모리 환경 생성
 public class BookServiceTest {
 

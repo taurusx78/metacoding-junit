@@ -9,7 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.example.metacodingjunit.domain.Book;
@@ -20,6 +23,7 @@ import com.jayway.jsonpath.JsonPath;
 
 // 통합테스트 (Controller, Service, Repository) - stub 필요없음
 // AWS 배포 전 통합테스트만 진행할 예정
+@ActiveProfiles("dev") // dev 모드에서만 동작하도록 설정
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class BookApiControllerTest {
 
@@ -39,13 +43,11 @@ public class BookApiControllerTest {
         String author = "author";
         bookRepository.save(Book.builder().title(title).author(author).build());
     } // 하나의 테스트가 끝나면 트랜잭션 종료됨
-    
 
     @Test
-    public void save() throws Exception {
+    public void save() {
         // given
         BookSaveReqDto bookSaveReqDto = new BookSaveReqDto("title", "author");
-
         String url = "http://localhost:" + port + "/api/v1/book";
 
         // when
@@ -74,5 +76,59 @@ public class BookApiControllerTest {
         String title = dc.read("$.response.items[0].title");
         assertThat(code).isEqualTo(1);
         assertThat(title).isEqualTo("title");
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void findById() {
+        // given
+        Long id = 1L;
+        String url = "http://localhost:" + port + "/api/v1/book/" + id;
+
+        // when
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+
+        // then
+        DocumentContext dc = JsonPath.parse(responseEntity.getBody()); // json 파싱
+        int code = dc.read("$.code");
+        String title = dc.read("$.response.title");
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo("title");
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void deleteById() {
+        // given
+        Long id = 1L;
+        String url = "http://localhost:" + port + "/api/v1/book/" + id;
+
+        // when
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
+
+        // then
+        DocumentContext dc = JsonPath.parse(responseEntity.getBody()); // json 파싱
+        int code = dc.read("$.code");
+        assertThat(code).isEqualTo(1);
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void updateById() {
+        // given
+        Long id = 1L;
+        BookSaveReqDto bookSaveReqDto = new BookSaveReqDto("title2", "author2");
+        String url = "http://localhost:" + port + "/api/v1/book/" + id;
+        HttpEntity<BookSaveReqDto> requestEntity = new HttpEntity<>(bookSaveReqDto);
+
+        // when
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
+
+        // then
+        DocumentContext dc = JsonPath.parse(responseEntity.getBody()); // json 파싱
+        int code = dc.read("$.code");
+        String title = dc.read("$.response.title");
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo("title2");
     }
 }
