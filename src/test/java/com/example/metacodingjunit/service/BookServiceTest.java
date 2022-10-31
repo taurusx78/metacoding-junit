@@ -38,9 +38,7 @@ public class BookServiceTest {
     @Test
     public void 책등록하기() {
         // given
-        BookSaveReqDto dto = new BookSaveReqDto();
-        dto.setTitle("title");
-        dto.setAuthor("author");
+        BookSaveReqDto dto = new BookSaveReqDto("title", "author");
 
         // stub (가설)
         // 가설 1. bookRepository의 save()를 실행하면 dto.toEntity()가 리턴됨
@@ -98,9 +96,7 @@ public class BookServiceTest {
     public void 책수정하기() {
         // given
         Long id = 1L;
-        BookSaveReqDto dto = new BookSaveReqDto();
-        dto.setTitle("expectedTitle");
-        dto.setAuthor("expectedAuthor");
+        BookSaveReqDto dto = new BookSaveReqDto("expectedTitle", "expectedAuthor");
 
         // stub
         Book book = new Book(id, "title", "author");

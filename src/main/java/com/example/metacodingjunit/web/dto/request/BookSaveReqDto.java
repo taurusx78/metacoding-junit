@@ -5,8 +5,12 @@ import javax.validation.constraints.Size;
 
 import com.example.metacodingjunit.domain.Book;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class BookSaveReqDto {
     
