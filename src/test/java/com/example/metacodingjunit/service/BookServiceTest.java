@@ -18,6 +18,7 @@ import com.example.metacodingjunit.domain.Book;
 import com.example.metacodingjunit.domain.BookRepository;
 import com.example.metacodingjunit.util.MailSender;
 import com.example.metacodingjunit.web.dto.request.BookSaveReqDto;
+import com.example.metacodingjunit.web.dto.response.BookRespDtoList;
 import com.example.metacodingjunit.web.dto.response.BookRespDto;
 
 // Repository를 제외한 Service만 테스트하기 위해 가짜데이터 생성
@@ -66,13 +67,13 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(bookList);
 
         // when
-        List<BookRespDto> dtoList = bookService.책목록보기();
+        BookRespDtoList dtoList = bookService.책목록보기();
 
         // then
-        assertThat(dtoList.get(0).getTitle()).isEqualTo(bookList.get(0).getTitle());
-        assertThat(dtoList.get(0).getAuthor()).isEqualTo(bookList.get(0).getAuthor());
-        assertThat(dtoList.get(1).getTitle()).isEqualTo(bookList.get(1).getTitle());
-        assertThat(dtoList.get(1).getAuthor()).isEqualTo(bookList.get(1).getAuthor());
+        assertThat(dtoList.getItems().get(0).getTitle()).isEqualTo(bookList.get(0).getTitle());
+        assertThat(dtoList.getItems().get(0).getAuthor()).isEqualTo(bookList.get(0).getAuthor());
+        assertThat(dtoList.getItems().get(1).getTitle()).isEqualTo(bookList.get(1).getTitle());
+        assertThat(dtoList.getItems().get(1).getAuthor()).isEqualTo(bookList.get(1).getAuthor());
     }
 
     @Test

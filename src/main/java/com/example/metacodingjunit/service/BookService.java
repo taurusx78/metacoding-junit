@@ -11,6 +11,7 @@ import com.example.metacodingjunit.domain.Book;
 import com.example.metacodingjunit.domain.BookRepository;
 import com.example.metacodingjunit.util.MailSender;
 import com.example.metacodingjunit.web.dto.request.BookSaveReqDto;
+import com.example.metacodingjunit.web.dto.response.BookRespDtoList;
 import com.example.metacodingjunit.web.dto.response.BookRespDto;
 
 import lombok.RequiredArgsConstructor;
@@ -34,10 +35,11 @@ public class BookService {
     }
 
     // 2. 책 목록보기
-    public List<BookRespDto> 책목록보기() {
-        return bookRepository.findAll().stream()
+    public BookRespDtoList 책목록보기() {
+        List<BookRespDto> dtoList = bookRepository.findAll().stream()
                 .map(book -> book.toDto()) // .map(book::toDto)
                 .collect(Collectors.toList());
+        return new BookRespDtoList(dtoList);
     }
 
     // 3. 책 한건보기

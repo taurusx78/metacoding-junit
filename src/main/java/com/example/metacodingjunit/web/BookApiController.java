@@ -1,6 +1,7 @@
 package com.example.metacodingjunit.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.metacodingjunit.service.BookService;
 import com.example.metacodingjunit.web.dto.request.BookSaveReqDto;
+import com.example.metacodingjunit.web.dto.response.BookRespDtoList;
 import com.example.metacodingjunit.web.dto.response.BookRespDto;
 import com.example.metacodingjunit.web.dto.response.CMRespDto;
 
@@ -47,8 +49,8 @@ public class BookApiController {
     // 2. 책 목록보기
     @GetMapping("/api/v1/book")
     public ResponseEntity<?> findAll() {
-
-        return null;
+        BookRespDtoList dtoList = bookService.책목록보기();
+        return new ResponseEntity<>(new CMRespDto<>(1, "책 목록보기 성공", dtoList), HttpStatus.OK); // 200
     }
 
     // 3. 책 한건보기
